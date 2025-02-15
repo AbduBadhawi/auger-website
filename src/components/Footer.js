@@ -158,7 +158,7 @@ function Footer() {
                 <FaFacebook className="w-6 h-6" />
               </motion.a>
               <motion.a
-                href="https://instagram.com/european_star?igshid=OGQ5ZDc2ODk2ZA=="
+                href="https://www.instagram.com/auger_kenya?igsh=MTd2cmJ5dHpqeXh6bg=="
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.2 }}
