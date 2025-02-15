@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Increase Node.js memory limit
-RUN node --max-old-space-size=4096 node_modules/.bin/vite build
+# RUN node --max-old-space-size=4096 node_modules/.bin/vite build
 
 # Build the app for production
 RUN npm run build
