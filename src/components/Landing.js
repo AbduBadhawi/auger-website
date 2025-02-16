@@ -52,6 +52,7 @@ const LandingPage = () => {
         autoPlay
         loop
         muted={isMuted} // Controlled by state
+        playsInline
         className="absolute z-0 w-full h-full object-cover"
       >
         <source src={backgroundVideo} type="video/mp4" />
