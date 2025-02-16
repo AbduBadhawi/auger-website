@@ -1,22 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from "react-scroll";
-import { Parallax } from "react-scroll-parallax";
-import { PiSpeakerHigh, PiSpeakerX } from "react-icons/pi"; // Import sound icons
+import { PiSpeakerHigh, PiSpeakerX } from "react-icons/pi";
 import backgroundVideo from '../assets/Snapinsta.app_video_48709695_340539462182670_4666753133435225402_n.mp4';
 
 const LandingPage = () => {
-  // Text phrases to cycle through
-  const phrases = [
-    "Welcome to Auger BMW",
-    "Drive with Confidence",
-  ];
-
+  const phrases = ["Welcome to Auger BMW", "Drive with Confidence"];
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(true); // Default: Muted
-  const videoRef = useRef(null); // Reference to video element
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
 
-  // Automatically cycle through phrases every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
@@ -24,7 +17,6 @@ const LandingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Toggle sound on/off
   const toggleSound = () => {
     if (videoRef.current) {
       videoRef.current.muted = !isMuted;
@@ -32,26 +24,30 @@ const LandingPage = () => {
     }
   };
 
-  // Floating shapes animation variants
-  const floatingVariants = {
-    float: {
-      y: [0, -20, 0],
-      transition: {
-        duration: 3,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      },
-    },
-  };
+  // ✅ Added useEffect to force play video
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.play().catch(error => console.log("Autoplay blocked:", error));
+
+      // ✅ Restart video if it gets paused
+      const handlePause = () => {
+        video.play().catch(error => console.log("Play attempt failed:", error));
+      };
+
+      video.addEventListener("pause", handlePause);
+      return () => video.removeEventListener("pause", handlePause);
+    }
+  }, []);
 
   return (
     <div id="home" className="relative h-screen w-full overflow-hidden bg-black">
-      {/* Background Video */}
+      {/* ✅ Background Video with Forced Playback */}
       <video
-        ref={videoRef} // Attach ref to the video
+        ref={videoRef}
         autoPlay
         loop
-        muted={isMuted} // Controlled by state
+        muted={isMuted}
         playsInline
         className="absolute z-0 w-full h-full object-cover"
       >
@@ -62,26 +58,13 @@ const LandingPage = () => {
       {/* Overlay Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black/80 z-10"></div>
 
-      {/* Sound Toggle Button */}
+      {/* ✅ Sound Toggle Button */}
       <button
         onClick={toggleSound}
         className="absolute top-16 mt-4 left-5 z-30 bg-white/60 text-black p-3 rounded-full shadow-md hover:bg-sky-500 transition-colors"
       >
-        {isMuted ? <PiSpeakerX  className="w-6 h-6" /> : <PiSpeakerHigh className="w-6 h-6" />}
+        {isMuted ? <PiSpeakerX className="w-6 h-6" /> : <PiSpeakerHigh className="w-6 h-6" />}
       </button>
-
-      {/* Floating Shapes */}
-      <motion.div
-        className="absolute top-1/4 left-1/4 w-20 h-20 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-lg opacity-50"
-        variants={floatingVariants}
-        animate="float"
-      />
-      <motion.div
-        className="absolute top-1/3 right-1/4 w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-lg opacity-50"
-        variants={floatingVariants}
-        animate="float"
-        transition={{ delay: 1 }}
-      />
 
       {/* Content */}
       <div className="flex flex-col items-center justify-center h-full relative z-20">
@@ -109,15 +92,12 @@ const LandingPage = () => {
 
           {/* Subheading */}
           <motion.p
-          
             className="text-white text-lg md:text-xl mt-24 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
           >
-          
             Enhance Your Driving Experience with Reliable, High-Quality BMW parts
-           
           </motion.p>
 
           {/* Call-to-Action Button */}
@@ -131,7 +111,7 @@ const LandingPage = () => {
               to="products"
               smooth={true}
               duration={600}
-              offset={-50}
+              offset={-60}
               className="cursor-pointer"
             >
               <button className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform">
@@ -141,23 +121,22 @@ const LandingPage = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scrolling Indicator (Optional) */}
+        {/* Scrolling Indicator */}
         <motion.div
-        
           className="absolute bottom-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2 }}
         >
           <div className="text-white text-sm animate-bounce">
-          <Link
+            <Link
               to="products"
               smooth={true}
               duration={600}
               offset={-50}
               className="cursor-pointer"
             >
-            Scroll Down
+              Scroll Down
             </Link>
           </div>
           <svg
